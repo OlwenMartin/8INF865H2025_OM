@@ -19,6 +19,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,11 +29,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -52,6 +53,8 @@ import androidx.compose.ui.unit.dp
 import com.example.tiptime.ui.theme.TipTimeTheme
 import java.text.NumberFormat
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.material3.Icon
+import androidx.compose.ui.res.painterResource
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,9 +84,8 @@ fun TipTimeLayout() {
 
     Column(
         modifier = Modifier
-            .statusBarsPadding()
-            .padding(horizontal = 40.dp)
-            .safeDrawingPadding(),
+            .padding(40.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -96,6 +98,7 @@ fun TipTimeLayout() {
         EditNumberField(
             label = R.string.bill_amount,
             value = amountInput,
+            leadingIcon = R.drawable.money,
             onValueChange = { amountInput = it },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
@@ -105,6 +108,7 @@ fun TipTimeLayout() {
         EditNumberField(
             label = R.string.how_was_the_service,
             value = tipInput,
+            leadingIcon = R.drawable.percent,
             onValueChange = { tipInput = it },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
@@ -144,6 +148,7 @@ private fun calculateTip(
 @Composable
 fun EditNumberField(
     @StringRes label: Int,
+    @DrawableRes leadingIcon: Int,
     value: String,
     onValueChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
@@ -151,6 +156,7 @@ fun EditNumberField(
 ) {
     TextField(
         value = value,
+        leadingIcon = { Icon(painter = painterResource(id = leadingIcon), null) },
         onValueChange = onValueChange,
         singleLine = true,
         label = { Text(stringResource(label)) },
